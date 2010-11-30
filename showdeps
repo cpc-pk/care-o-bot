@@ -89,22 +89,23 @@ PACKAGES_DRIVER=\
 cob_arm,\
 cob_base,\
 cob_base_drive_chain,\
+cob_battery,\
 cob_camera_sensors,\
 cob_canopen_motor,\
 cob_forcetorque,\
 cob_generic_can,\
-cob_hardware_info,\
 cob_head_axis,\
 cob_hokuyo,\
+cob_joint_state_aggregator,\
 cob_joy,\
 cob_light,\
 cob_manipulator,\
-cob_point_cloud_publisher,\
 cob_powercube_chain,\
 cob_relayboard,\
 cob_sdh,\
 cob_sick_s300,\
 cob_torso,\
+cob_touch,\
 cob_tray,\
 cob_undercarriage_ctrl
 
