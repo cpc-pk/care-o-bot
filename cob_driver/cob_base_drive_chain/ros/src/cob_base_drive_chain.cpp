@@ -237,11 +237,11 @@ class NodeClass
 		// function will be called when a new message arrives on a topic
 		void topicCallback_JointStateCmd(const sensor_msgs::JointState::ConstPtr& msg)
 		{
-			//ROS_DEBUG("Topic Callback joint_command");
+			ROS_DEBUG("Topic Callback joint_command");
 			// only process cmds when system is initialized
 			if(m_bisInitialized == true)
 			{
-				//ROS_DEBUG("Topic Callback joint_command - Sending Commands to drives (initialized)");
+				ROS_DEBUG("Topic Callback joint_command - Sending Commands to drives (initialized)");
 		   		int iRet;
 				sensor_msgs::JointState JointStateCmd = *msg;
 				// check if velocities lie inside allowed boundaries
@@ -274,7 +274,9 @@ class NodeClass
 
 					// and cmd velocities to Can-Nodes
 					//m_CanCtrlPltf->setVelGearRadS(iCanIdent, dVelEncRadS);
+					ROS_DEBUG("Send data to drives");
 					iRet = m_CanCtrlPltf->setVelGearRadS(i, JointStateCmd.velocity[i]);
+					ROS_DEBUG("Successfully sent data to drives");
 					
 					if(m_bPubEffort) 
 						m_CanCtrlPltf->requestMotorTorque();
@@ -289,7 +291,7 @@ class NodeClass
 		bool srvCallback_Init(cob_srvs::Trigger::Request &req,
 							  cob_srvs::Trigger::Response &res )
 		{
-			//ROS_DEBUG("Service Callback init");
+			ROS_DEBUG("Service Callback init");
 			if(m_bisInitialized == false)
 			{
 				m_bisInitialized = initDrives();
@@ -348,7 +350,7 @@ class NodeClass
 		bool srvCallback_Reset(cob_srvs::Trigger::Request &req,
 									 cob_srvs::Trigger::Response &res )
 		{
-			//ROS_DEBUG("Service callback reset");
+			ROS_DEBUG("Service callback reset");
 			res.success = m_CanCtrlPltf->resetPltf();
 			if (res.success) {
 	   			ROS_INFO("Can-Node resetted");
@@ -364,7 +366,7 @@ class NodeClass
 		bool srvCallback_Shutdown(cob_srvs::Trigger::Request &req,
 									 cob_srvs::Trigger::Response &res )
 		{
-			//ROS_DEBUG("Service callback shutdown");
+			ROS_DEBUG("Service callback shutdown");
 			res.success = m_CanCtrlPltf->shutdownPltf();
 			if (res.success)
 	   			ROS_INFO("Drives shut down");
@@ -377,7 +379,7 @@ class NodeClass
 		bool srvCallback_GetJointState(cob_srvs::GetJointState::Request &req,
 									 cob_srvs::GetJointState::Response &res )
 		{
-			//ROS_DEBUG("Service Callback GetJointState");
+			ROS_DEBUG("Service Callback GetJointState");
 			// init local variables
 			int j, k, ret_sprintf;
 			bool bIsError;
@@ -506,7 +508,7 @@ class NodeClass
 
 			// publish jointstate message
 			topicPub_JointState.publish(jointstate);
-			//ROS_DEBUG("published new drive-chain configuration (JointState message)");
+			ROS_DEBUG("published new drive-chain configuration (JointState message)");
 			
 
 			if(m_bisInitialized)
@@ -540,7 +542,7 @@ class NodeClass
 
 			// publish diagnostic message
 			topicPub_Diagnostic.publish(diagnostics);
-			//ROS_DEBUG("published new drive-chain configuration (JointState message)");
+			ROS_DEBUG("published new drive-chain configuration (JointState message)");
 
 			return true;
 		}
@@ -548,7 +550,7 @@ class NodeClass
 		//EXPERIMENTAL: publish JointStates cyclical instead of service callback
 		bool publish_JointStates()
 		{
-			//ROS_DEBUG("Service Callback GetJointState");
+			ROS_DEBUG("Service Callback GetJointState");
 			// init local variables
 			int j, k, ret_sprintf;
 			bool bIsError;
@@ -599,6 +601,7 @@ class NodeClass
 					jointstate.velocity[i] = 0.0;
 					jointstate.effort[i] = 0.0;
 
+/*
 					// set joint names
    					if( i == 1 || i == 3 || i == 5 || i == 7) // ToDo: specify this via the config-files
 					{
@@ -618,13 +621,16 @@ class NodeClass
 					}
 					// set joint names
 					jointstate.name[i] = str_cat;
+*/
 				}
 			}
 			else
 			{
 				// as soon as drive chain is initialized
 				// read Can-Buffer
+				ROS_DEBUG("Read CAN-Buffer");
 				m_CanCtrlPltf->evalCanBuffer();
+				ROS_DEBUG("Successfully read CAN-Buffer");
 				
 				j = 0;
 				k = 0;
@@ -647,20 +653,25 @@ class NodeClass
 						MathSup::normalizePi(vdAngGearRad[i]);
 						j = j+1;
 						// create name for identification in JointState msg
+/*
 						ret_sprintf = sprintf(c_num, "%i", j);
 						str_num.assign(1, c_num[0]);
 						str_cat = str_steer + str_num;
+
 					}
 					else
 					{
 						// create name for identification in JointState msg
 						k = k+1;
+
 						ret_sprintf = sprintf(c_num, "%i", k);
 						str_num.assign(1, c_num[0]);
 						str_cat = str_drive + str_num;
+*/
 					}
 					// set joint names
-					jointstate.name[i] = str_cat;
+//					jointstate.name[i] = str_cat;
+
 				}
 
 				// set data to jointstate
@@ -677,7 +688,7 @@ class NodeClass
 
 			// publish jointstate message
 			topicPub_JointState.publish(jointstate);
-			//ROS_DEBUG("published new drive-chain configuration (JointState message)");
+			ROS_DEBUG("published new drive-chain configuration (JointState message)");
 			
 
 			if(m_bisInitialized)
@@ -711,7 +722,7 @@ class NodeClass
 
 			// publish diagnostic message
 			topicPub_Diagnostic.publish(diagnostics);
-			//ROS_DEBUG("published new drive-chain configuration (JointState message)");
+			ROS_DEBUG("published new drive-chain configuration (JointState message)");
 
 			return true;
 		}
