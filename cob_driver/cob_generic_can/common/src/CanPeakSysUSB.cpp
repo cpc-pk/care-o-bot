@@ -157,8 +157,22 @@ bool CANPeakSysUSB::transmitMsg(CanMsg CMsg, bool bBlocking)
 	
 	// write msg
 	int iRet;
-	iRet = CAN_Write(m_handle, &TPCMsg);
+
+	//----------------------------------
+	//DRIVE_CHAIN DEBUG:
+	std::cout << "CANPeakUSB: now CAN_Write" << std::endl;
+	
+	//iRet = CAN_Write(m_handle, &TPCMsg);
+
+	iRet = LINUX_CAN_Write_Timeout(m_handle, &TPCMsg, 10);
+
+	if(iRet == CAN_ERR_QXMTFULL) std::cout << "CAN sending queue is FULL! Timeout occured." << std::endl;
+
+	std::cout << "CANPeakUSB: returned from CAN_Write" << std::endl;
+	
 	iRet = CAN_Status(m_handle);
+
+	std::cout << "CANPeakUSB: returned CAN_Status" << std::endl;
 
 	if(iRet < 0)
 	{

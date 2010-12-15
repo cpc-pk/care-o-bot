@@ -720,6 +720,8 @@ void CanDriveHarmonica::setGearVelRadS(double dVelGearRadS)
 		std::cout << "SteerVelo asked for " << iVelEncIncrPeriod << " EncIncrements" << std::endl;
 		iVelEncIncrPeriod = -1 * (int)m_DriveParam.getVelMax();
 	}
+
+	std::cout << "CanDriveHarmonica: setGearVelRads() now sending several msgs to CAN" << std::endl;
 	
 	IntprtSetInt(8, 'J', 'V', 0, iVelEncIncrPeriod);
 	IntprtSetInt(4, 'B', 'G', 0, 0);

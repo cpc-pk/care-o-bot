@@ -1339,6 +1339,9 @@ int CanCtrlPltfCOb3::setVelGearRadS(int iCanIdent, double dVelGearRadS)
 		// check if Identifier fits to availlable hardware
 		if(iCanIdent == m_viMotorID[i])
 		{
+
+			std::cout << "CanCtrlPltfCOb3: Call CanDriveHarminoca setGearVelRads." << std::endl;
+			
 			m_vpMotor[i]->setGearVelRadS(dVelGearRadS);
 		}
 	}
